@@ -1,0 +1,24 @@
+{
+  "cities": [
+    {
+      "id": "IST",
+      "name": "İstanbul",
+      "country": "Türkiye"
+    },
+    {
+      "id": "AYT",
+      "name": "Antalya",
+      "country": "Türkiye"
+    },
+    {
+      "id": "ESB",
+      "name": "Ankara",
+      "country": "Türkiye"
+    },
+    {
+      "id": "COV",
+      "name": "Adana",
+      "country": "Türkiye"
+    }
+  ]
+} 
