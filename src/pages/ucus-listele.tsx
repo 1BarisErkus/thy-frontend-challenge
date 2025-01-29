@@ -11,11 +11,19 @@ const PageContainer = styled.div`
   min-height: 100vh;
   padding: 20px;
   background-color: ${(props) => props.theme.colors.primaryWhite};
+
+  @media (max-width: 768px) {
+    padding: 10px;
+  }
 `;
 
 const ContentWrapper = styled.div`
   max-width: 1200px;
   margin: 0 auto;
+
+  @media (max-width: 768px) {
+    max-width: 100%;
+  }
 `;
 
 const SortingBar = styled.div`
@@ -25,6 +33,19 @@ const SortingBar = styled.div`
   justify-content: flex-end;
   align-items: center;
   gap: 12px;
+  color: ${(props) => props.theme.colors.primaryWhite};
+
+  @media (max-width: 768px) {
+    padding: 10px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+
+    span {
+      text-align: center;
+      margin-bottom: 4px;
+    }
+  }
 `;
 
 const SortButton = styled.button<{ $isActive: boolean }>`
@@ -32,9 +53,18 @@ const SortButton = styled.button<{ $isActive: boolean }>`
     props.$isActive ? props.theme.colors.primaryGray : "none"};
   border: 1px solid white;
   padding: 5px 15px;
+  color: ${(props) => props.theme.colors.primaryWhite};
+  cursor: pointer;
+  transition: background-color 0.2s ease;
 
   &:hover {
     background-color: ${(props) => props.theme.colors.primaryGray};
+  }
+
+  @media (max-width: 768px) {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
   }
 `;
 
@@ -42,6 +72,10 @@ const FlightListContainer = styled.div`
   display: flex;
   flex-direction: column;
   background-color: ${(props) => props.theme.colors.secondaryWhite};
+
+  @media (max-width: 768px) {
+    margin: 0 -10px;
+  }
 `;
 
 const LoadingMessage = styled.div`
@@ -49,6 +83,11 @@ const LoadingMessage = styled.div`
   padding: 40px;
   color: ${(props) => props.theme.colors.secondaryGray};
   font-size: 16px;
+
+  @media (max-width: 768px) {
+    padding: 20px;
+    font-size: 14px;
+  }
 `;
 
 export default function FlightListPage() {

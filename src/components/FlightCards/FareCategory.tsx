@@ -14,6 +14,11 @@ const CategoryContainer = styled.div`
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
   }
+
+  @media (max-width: 768px) {
+    padding: 16px;
+    gap: 12px;
+  }
 `;
 
 const CategoryName = styled.div`
@@ -22,6 +27,11 @@ const CategoryName = styled.div`
   font-weight: bold;
   padding-bottom: 8px;
   border-bottom: 1px solid ${(props) => props.theme.colors.primaryGray};
+
+  @media (max-width: 768px) {
+    font-size: 18px;
+    padding-bottom: 6px;
+  }
 `;
 
 const CategoryPrice = styled.div<{ $hasDiscount?: boolean }>`
@@ -43,12 +53,29 @@ const CategoryPrice = styled.div<{ $hasDiscount?: boolean }>`
     color: ${(props) => props.theme.colors.primaryGray};
     margin-left: 4px;
   }
+
+  @media (max-width: 768px) {
+    font-size: 18px;
+
+    .original-price {
+      font-size: 13px;
+    }
+
+    .currency {
+      font-size: 13px;
+    }
+  }
 `;
 
 const RightItem = styled.li`
   font-size: 14px;
   color: ${(props) => props.theme.colors.primaryGray};
   padding: 4px 0;
+
+  @media (max-width: 768px) {
+    font-size: 13px;
+    padding: 3px 0;
+  }
 `;
 
 const SelectButton = styled.button<{ $disabled?: boolean }>`
@@ -61,12 +88,21 @@ const SelectButton = styled.button<{ $disabled?: boolean }>`
   cursor: ${(props) => (props.$disabled ? "not-allowed" : "pointer")};
   margin-top: auto;
   opacity: ${(props) => (props.$disabled ? 0.7 : 1)};
+  padding: 12px;
+  border-radius: 4px;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
 
   &:hover {
     background: ${(props) =>
       props.$disabled
         ? props.theme.colors.primaryDisabled
         : props.theme.colors.secondaryRed};
+  }
+
+  @media (max-width: 768px) {
+    padding: 10px;
+    font-size: 14px;
   }
 `;
 

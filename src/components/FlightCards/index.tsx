@@ -11,6 +11,11 @@ const FlightListContainer = styled.div`
   flex-direction: column;
   gap: 16px;
   padding: 16px;
+
+  @media (max-width: 768px) {
+    padding: 12px;
+    gap: 12px;
+  }
 `;
 
 const FlightSection = styled.div`
@@ -27,6 +32,12 @@ const Card = styled.div`
   overflow: hidden;
   padding: 16px;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    padding: 12px;
+  }
 `;
 
 const FareCategories = styled.div<{ $isVisible: boolean }>`
@@ -37,6 +48,13 @@ const FareCategories = styled.div<{ $isVisible: boolean }>`
   margin-top: 16px;
   padding: 16px 0;
   border-radius: 4px;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    padding: 12px;
+    margin-top: 12px;
+  }
 `;
 
 type FlightCardsProps = {

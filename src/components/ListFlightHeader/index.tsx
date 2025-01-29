@@ -14,11 +14,22 @@ const Header = styled.div`
   align-items: center;
   font-size: 12px;
   font-weight: bold;
+  color: ${(props) => props.theme.colors.primaryWhite};
+
+  @media (max-width: 768px) {
+    width: 60px;
+    padding: 8px 16px;
+    font-size: 11px;
+  }
 `;
 
 const FlightBasicInfo = styled.span`
   font-size: 24px;
   color: ${(props) => props.theme.colors.secondaryGray};
+
+  @media (max-width: 768px) {
+    font-size: 18px;
+  }
 `;
 
 const PromoSection = styled.div`
@@ -27,11 +38,22 @@ const PromoSection = styled.div`
   gap: 10px;
   margin-top: 20px;
   margin-bottom: 20px;
+
+  @media (max-width: 768px) {
+    margin: 16px 0;
+    flex-direction: column;
+    align-items: flex-start;
+  }
 `;
 
 const PromoText = styled.span`
   font-size: 14px;
   color: ${(props) => props.theme.colors.secondaryGray};
+
+  @media (max-width: 768px) {
+    font-size: 13px;
+    margin-bottom: 8px;
+  }
 `;
 
 const Toggle = styled.div`
@@ -66,6 +88,12 @@ const PromoEnabledText = styled.p`
   font-size: 14px;
   color: ${(props) => props.theme.colors.secondaryGray};
   margin-bottom: 20px;
+
+  @media (max-width: 768px) {
+    font-size: 13px;
+    margin-bottom: 16px;
+    line-height: 1.4;
+  }
 `;
 
 export const ListFlightHeader = () => {

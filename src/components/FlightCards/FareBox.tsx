@@ -9,6 +9,10 @@ const FareBoxContainer = styled.div`
   border-radius: 4px;
   overflow: hidden;
   height: 100%;
+
+  @media (max-width: 768px) {
+    height: auto;
+  }
 `;
 
 const FareHeader = styled.div<{ $isSelected: boolean }>`
@@ -28,6 +32,11 @@ const FareHeader = styled.div<{ $isSelected: boolean }>`
 
   &:hover {
     background: ${(props) => props.theme.colors.secondaryWhite};
+  }
+
+  @media (max-width: 768px) {
+    min-height: 60px;
+    padding: 10px;
   }
 `;
 
@@ -62,6 +71,11 @@ const FareInfo = styled.div`
   display: flex;
   justify-content: space-around;
   align-items: center;
+
+  @media (max-width: 768px) {
+    justify-content: space-between;
+    gap: 8px;
+  }
 `;
 
 const FareType = styled.div`
@@ -69,12 +83,21 @@ const FareType = styled.div`
   color: ${(props) => props.theme.colors.primaryGray};
   font-weight: 400;
   text-transform: uppercase;
+
+  @media (max-width: 768px) {
+    font-size: 11px;
+  }
 `;
 
 const OnePassegerAmount = styled.div`
   font-size: 12px;
   color: ${(props) => props.theme.colors.primaryGray};
   font-weight: 400;
+
+  @media (max-width: 768px) {
+    font-size: 11px;
+    text-align: right;
+  }
 `;
 
 const FareAmount = styled.div`
@@ -86,6 +109,12 @@ const FareAmount = styled.div`
   span {
     font-size: 16px;
     font-weight: 600;
+  }
+
+  @media (max-width: 768px) {
+    span {
+      font-size: 14px;
+    }
   }
 `;
 
