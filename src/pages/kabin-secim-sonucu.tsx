@@ -18,15 +18,15 @@ const ContentWrapper = styled.div`
   padding-bottom: 20px;
 `;
 
-const StatusMessage = styled.div<{ $isSuccess: boolean }>`
+const StatusMessage = styled.div<{ $isAvailable: boolean }>`
   display: flex;
   align-items: center;
   gap: 10px;
-  color: #000;
+  color: ${(props) => props.theme.colors.primaryBlack};
   font-size: 16px;
   font-weight: 500;
   padding-bottom: 20px;
-  border-bottom: 1px solid #333;
+  border-bottom: 1px solid ${(props) => props.theme.colors.primaryGray};
 
   svg {
     font-size: 20px;
@@ -41,49 +41,60 @@ const TotalSection = styled.div`
 `;
 
 const TotalLabel = styled.div`
-  color: #232b38;
+  color: ${(props) => props.theme.colors.primaryBlack};
   font-size: 20px;
   font-weight: 400;
 `;
 
 const TotalAmount = styled.div`
-  color: #0745cb;
+  color: ${(props) => props.theme.colors.primaryBlue};
   font-size: 20px;
   font-weight: 500;
   display: flex;
-  align-items: center;
-  gap: 5px;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+
+  .per-passenger {
+    font-size: 14px;
+    color: ${(props) => props.theme.colors.primaryGray};
+  }
+
+  .total {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
 
   .currency {
-    color: #0745cb;
+    color: ${(props) => props.theme.colors.primaryBlue};
   }
 `;
 
 const Button = styled.button`
-  background: #e81932;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 500;
+  background: ${(props) => props.theme.colors.primaryRed};
   float: right;
-  transition: background-color 0.2s;
   margin-top: 40px;
 
   &:hover {
-    background: #d41730;
+    background: ${(props) => props.theme.colors.secondaryRed};
   }
 `;
 
 export default function KabinSecimi() {
   const router = useRouter();
-  const { amount, status = "error" } = router.query;
-  const isSuccess = status === "success";
+  const { amount, status = "error", passengers = "1" } = router.query;
+  const isAvailable =
+    typeof status === "string" && status.toLowerCase() === "available";
+
+  const perPassengerAmount =
+    typeof amount === "string" ? parseFloat(amount) : 0;
+  const passengerCount =
+    typeof passengers === "string" ? parseInt(passengers, 10) : 1;
+  const totalAmount = perPassengerAmount * passengerCount;
 
   const messages = {
-    success: "Kabin seçiminiz tamamlandı.",
+    available: "Kabin seçiminiz tamamlandı.",
     error: "Kabin seçiminiz tamamlanamadı.",
   };
 
@@ -91,31 +102,37 @@ export default function KabinSecimi() {
     <>
       <Head>
         <title>
-          {isSuccess ? "Kabin Seçimi Tamamlandı" : "Kabin Seçimi Hatası"} | THY
+          {isAvailable ? "Kabin Seçimi Tamamlandı" : "Kabin Seçimi Hatası"} |
+          THY
         </title>
         <meta
           name="description"
-          content={messages[isSuccess ? "success" : "error"]}
+          content={messages[isAvailable ? "available" : "error"]}
         />
       </Head>
 
       <Container>
         <ContentWrapper>
-          <StatusMessage $isSuccess={isSuccess}>
-            {isSuccess ? (
+          <StatusMessage $isAvailable={isAvailable}>
+            {isAvailable ? (
               <FontAwesomeIcon icon={faCheckCircle} color="#4CAF50" />
             ) : (
               <FontAwesomeIcon icon={faTimesCircle} color="#E81932" />
             )}
-            {messages[isSuccess ? "success" : "error"]}
+            {messages[isAvailable ? "available" : "error"]}
           </StatusMessage>
 
-          {isSuccess ? (
+          {isAvailable ? (
             <TotalSection>
               <TotalLabel>Toplam tutar</TotalLabel>
               <TotalAmount>
-                <span>{amount}</span>
-                TRY
+                <span className="per-passenger">
+                  Yolcu başına: {perPassengerAmount.toFixed(2)} TRY
+                </span>
+                <div className="total">
+                  <span>{totalAmount.toFixed(2)}</span>
+                  <span className="currency">TRY</span>
+                </div>
               </TotalAmount>
             </TotalSection>
           ) : (

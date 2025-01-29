@@ -1,15 +1,10 @@
 import { useRouter } from "next/router";
 import React from "react";
 import styled from "styled-components";
-
-type ListFlightHeaderProps = {
-  promoEnabled: boolean;
-  setPromoEnabled: (enabled: boolean) => void;
-};
+import { usePromoEnabled } from "../../hooks/usePromoEnabled";
 
 const Header = styled.div`
-  background-color: #e81932;
-  color: white;
+  background-color: ${(props) => props.theme.colors.primaryRed};
   padding: 10px 20px;
   border-radius: 4px;
   margin-bottom: 20px;
@@ -23,7 +18,7 @@ const Header = styled.div`
 
 const FlightBasicInfo = styled.span`
   font-size: 24px;
-  color: #333;
+  color: ${(props) => props.theme.colors.secondaryGray};
 `;
 
 const PromoSection = styled.div`
@@ -36,13 +31,13 @@ const PromoSection = styled.div`
 
 const PromoText = styled.span`
   font-size: 14px;
-  color: #333;
+  color: ${(props) => props.theme.colors.secondaryGray};
 `;
 
 const Toggle = styled.div`
   width: 40px;
   height: 20px;
-  background-color: #ccc;
+  background-color: ${(props) => props.theme.colors.primaryGray};
   border-radius: 10px;
   position: relative;
   cursor: pointer;
@@ -60,7 +55,7 @@ const Toggle = styled.div`
   }
 
   &[data-enabled="true"] {
-    background-color: #4caf50;
+    background-color: ${(props) => props.theme.colors.primaryGreen};
     &:after {
       transform: translateX(20px);
     }
@@ -69,16 +64,19 @@ const Toggle = styled.div`
 
 const PromoEnabledText = styled.p`
   font-size: 14px;
-  color: #000;
+  color: ${(props) => props.theme.colors.secondaryGray};
   margin-bottom: 20px;
 `;
 
-export const ListFlightHeader = ({
-  promoEnabled,
-  setPromoEnabled,
-}: ListFlightHeaderProps) => {
+export const ListFlightHeader = () => {
   const router = useRouter();
   const { from, to, passengers } = router.query;
+  const { isEnabled, togglePromoEnabled } = usePromoEnabled();
+
+  const handleToggle = () => {
+    const newState = !isEnabled;
+    togglePromoEnabled(newState);
+  };
 
   return (
     <>
@@ -88,12 +86,9 @@ export const ListFlightHeader = ({
       </FlightBasicInfo>
       <PromoSection>
         <PromoText>Promosyon Kodu</PromoText>
-        <Toggle
-          data-enabled={promoEnabled}
-          onClick={() => setPromoEnabled(!promoEnabled)}
-        />
+        <Toggle data-enabled={isEnabled} onClick={handleToggle} />
       </PromoSection>
-      {promoEnabled && (
+      {isEnabled && (
         <>
           <PromoEnabledText>
             Promosyon Kodu seçeneği ile tüm Economy kabini Eco Fly paketlerini

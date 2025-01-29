@@ -1,13 +1,16 @@
+import Head from "next/head";
+import { useState } from "react";
 import { useRouter } from "next/router";
 import styled from "styled-components";
-import { useEffect, useState } from "react";
-import flightsData from "../db/flights.json";
+import { usePromoEnabled } from "@/hooks/usePromoEnabled";
+import { useFlights } from "@/hooks/useFlights";
 import { ListFlightHeader } from "@/components/ListFlightHeader";
 import { FlightCards } from "@/components/FlightCards";
 
 const PageContainer = styled.div`
   min-height: 100vh;
   padding: 20px;
+  background-color: ${(props) => props.theme.colors.primaryWhite};
 `;
 
 const ContentWrapper = styled.div`
@@ -16,108 +19,66 @@ const ContentWrapper = styled.div`
 `;
 
 const SortingBar = styled.div`
-  background-color: #1c2a3a;
+  background-color: ${(props) => props.theme.colors.primaryBlue};
   padding: 10px 20px;
-  border-top-left-radius: 4px;
-  border-top-right-radius: 4px;
   display: flex;
   justify-content: flex-end;
   align-items: center;
+  gap: 12px;
 `;
 
-const SortButton = styled.button<{ isActive: boolean }>`
+const SortButton = styled.button<{ $isActive: boolean }>`
   background: ${(props) =>
-    props.isActive ? "rgba(192, 192, 192, 0.4)" : "none"};
+    props.$isActive ? props.theme.colors.primaryGray : "none"};
   border: 1px solid white;
   padding: 5px 15px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 12px;
-  margin-left: 10px;
-  color: white;
-  transition: all 0.2s ease;
 
   &:hover {
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: ${(props) => props.theme.colors.primaryGray};
   }
 `;
 
 const FlightListContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  background-color: #f5f5f5;
+  background-color: ${(props) => props.theme.colors.secondaryWhite};
 `;
 
-type Flight = {
-  originAirport: {
-    name: string;
-    code: string;
-    city: {
-      code: string;
-      name: string;
-    };
-  };
-  destinationAirport: {
-    name: string;
-    code: string;
-    city: {
-      code: string;
-      name: string;
-    };
-  };
-  arrivalDateTimeDisplay: string;
-  departureDateTimeDisplay: string;
-  flightDuration: string;
-  fareCategories: {
-    [key: string]: {
-      subcategories: Array<{
-        status: string;
-        price: {
-          amount: number;
-          currency: string;
-        };
-      }>;
-    };
-  };
-};
+const LoadingMessage = styled.div`
+  text-align: center;
+  padding: 40px;
+  color: ${(props) => props.theme.colors.secondaryGray};
+  font-size: 16px;
+`;
 
 export default function FlightListPage() {
-  const { query } = useRouter();
-  const { from, to } = query;
-
-  const [filteredFlights, setFilteredFlights] = useState<Flight[]>([]);
-  const [promoEnabled, setPromoEnabled] = useState(false);
+  const router = useRouter();
+  const { from, to, passengers = "1" } = router.query;
+  const { flights, loading } = useFlights(from as string, to as string);
+  const { isEnabled: promoEnabled } = usePromoEnabled();
   const [sortBy, setSortBy] = useState<"ECONOMY" | "BUSINESS">("ECONOMY");
   const [selectedFare, setSelectedFare] = useState<{
     [key: number]: "ECONOMY" | "BUSINESS" | null;
   }>({});
 
-  useEffect(() => {
-    if (!from || !to) return;
-
-    const flights = flightsData.flights.filter(
-      ({ originAirport, destinationAirport }) =>
-        originAirport.city.code === from && destinationAirport.city.code === to
-    );
+  const sortedFlights = [...flights].sort((a, b) => {
+    const getPrice = (
+      flight: (typeof flights)[0],
+      type: "ECONOMY" | "BUSINESS"
+    ) => {
+      const basePrice =
+        flight.fareCategories[type].subcategories[0].price.amount;
+      return promoEnabled && type === "ECONOMY" ? basePrice * 0.5 : basePrice;
+    };
 
     if (sortBy === "ECONOMY") {
-      flights.sort(
-        ({ fareCategories: a }, { fareCategories: b }) =>
-          a.ECONOMY.subcategories[0].price.amount -
-          b.ECONOMY.subcategories[0].price.amount
-      );
-    } else if (sortBy === "BUSINESS") {
-      flights.sort(
-        (
-          { departureDateTimeDisplay: aTime },
-          { departureDateTimeDisplay: bTime }
-        ) => new Date(aTime).getTime() - new Date(bTime).getTime()
+      return getPrice(a, "ECONOMY") - getPrice(b, "ECONOMY");
+    } else {
+      return a.departureDateTimeDisplay.localeCompare(
+        b.departureDateTimeDisplay
       );
     }
-
-    setFilteredFlights(flights);
-  }, [from, to, sortBy]);
+  });
 
   const handleFareSelect = (index: number, type: "ECONOMY" | "BUSINESS") => {
     setSelectedFare((prev) => ({
@@ -126,38 +87,67 @@ export default function FlightListPage() {
     }));
   };
 
+  const handleFlightSelect = (
+    flightIndex: number,
+    fareType: "ECONOMY" | "BUSINESS",
+    brandCode: string,
+    amount: number
+  ) => {
+    const flight = sortedFlights[flightIndex];
+
+    router.push({
+      pathname: "/kabin-secim-sonucu",
+      query: {
+        status: flight.fareCategories[fareType].subcategories.find(
+          (cat) => cat.brandCode === brandCode
+        )?.status,
+        amount: amount.toFixed(2),
+        passengers,
+      },
+    });
+  };
+
   return (
-    <PageContainer>
-      <ContentWrapper>
-        <ListFlightHeader
-          promoEnabled={promoEnabled}
-          setPromoEnabled={setPromoEnabled}
-        />
+    <>
+      <Head>
+        <title>THY Frontend Challenge | Uçuşlar</title>
+        <meta name="description" content="THY Frontend Challenge | Uçuşlar" />
+      </Head>
 
-        <FlightListContainer>
-          <SortingBar>
-            <span>Sıralama Kriteri</span>
-            <SortButton
-              isActive={sortBy === "ECONOMY"}
-              onClick={() => setSortBy("ECONOMY")}
-            >
-              Ekonomi Ücreti
-            </SortButton>
-            <SortButton
-              isActive={sortBy === "BUSINESS"}
-              onClick={() => setSortBy("BUSINESS")}
-            >
-              Kalkış Saati
-            </SortButton>
-          </SortingBar>
+      <PageContainer>
+        <ContentWrapper>
+          <ListFlightHeader />
 
-          <FlightCards
-            flights={filteredFlights}
-            selectedFare={selectedFare}
-            onFareSelect={handleFareSelect}
-          />
-        </FlightListContainer>
-      </ContentWrapper>
-    </PageContainer>
+          <FlightListContainer>
+            <SortingBar>
+              <span>Sıralama Kriteri</span>
+              <SortButton
+                $isActive={sortBy === "ECONOMY"}
+                onClick={() => setSortBy("ECONOMY")}
+              >
+                Ekonomi Ücreti
+              </SortButton>
+              <SortButton
+                $isActive={sortBy === "BUSINESS"}
+                onClick={() => setSortBy("BUSINESS")}
+              >
+                Kalkış Saati
+              </SortButton>
+            </SortingBar>
+
+            {loading ? (
+              <LoadingMessage>Uçuşlar yükleniyor...</LoadingMessage>
+            ) : (
+              <FlightCards
+                flights={sortedFlights}
+                selectedFare={selectedFare}
+                onFareSelect={handleFareSelect}
+                onFlightSelect={handleFlightSelect}
+              />
+            )}
+          </FlightListContainer>
+        </ContentWrapper>
+      </PageContainer>
+    </>
   );
 }

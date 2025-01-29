@@ -2,7 +2,6 @@ import styled from "styled-components";
 
 const FlightInfoBox = styled.div`
   padding: 24px;
-  background: white;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -25,7 +24,7 @@ const FlightRoute = styled.div`
     transform: translateX(70%);
     width: 100px;
     height: 1px;
-    background: #e8e8e8;
+    background: ${(props) => props.theme.colors.primaryGray};
   }
 `;
 
@@ -40,24 +39,24 @@ const RoutePoint = styled.div`
 const Time = styled.div`
   font-size: 24px;
   font-weight: 500;
-  color: #1c2a3a;
+  color: ${(props) => props.theme.colors.primaryBlack};
   margin-bottom: 4px;
 `;
 
 const AirportCode = styled.div`
   font-size: 14px;
-  color: #1c2a3a;
+  color: ${(props) => props.theme.colors.primaryBlack};
   font-weight: 500;
 `;
 
 const CityName = styled.div`
   font-size: 12px;
-  color: #687791;
+  color: ${(props) => props.theme.colors.primaryGray};
 `;
 
 const DurationLabel = styled.div`
   font-size: 12px;
-  color: #687791;
+  color: ${(props) => props.theme.colors.primaryGray};
   margin-bottom: 4px;
 `;
 
@@ -71,7 +70,7 @@ const DurationInfo = styled.div`
 const Duration = styled.div`
   font-size: 16px;
   font-weight: bold;
-  color: #000000;
+  color: ${(props) => props.theme.colors.primaryBlack};
   white-space: nowrap;
 `;
 

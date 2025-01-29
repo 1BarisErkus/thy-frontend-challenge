@@ -16,13 +16,13 @@ const ModalOverlay = styled.div`
 `;
 
 const ModalContent = styled.div`
-  background: white;
+  background: ${(props) => props.theme.colors.primaryWhite};
   padding: 24px;
   border-radius: 8px;
   max-width: 400px;
   width: 90%;
   position: relative;
-  color: #063048;
+  color: ${(props) => props.theme.colors.primaryBlue};
 `;
 
 const CloseButton = styled.button`
@@ -30,21 +30,21 @@ const CloseButton = styled.button`
   top: 16px;
   right: 16px;
   background: none;
-  border: none;
-  cursor: pointer;
-  color: #063048;
+  color: ${(props) => props.theme.colors.primaryBlue};
   font-size: 20px;
 `;
 
 const Title = styled.h3`
   margin: 0 0 16px 0;
   font-size: 20px;
-  color: #e81932;
+  color: ${(props) => props.theme.colors.primaryRed};
+  text-align: start;
 `;
 
 const Message = styled.p`
   margin: 0;
   line-height: 1.5;
+  text-align: start;
 `;
 
 const ButtonContainer = styled.div`
@@ -54,17 +54,10 @@ const ButtonContainer = styled.div`
 `;
 
 const ConfirmButton = styled.button`
-  background: #e81932;
-  color: white;
-  border: none;
-  padding: 10px 24px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 16px;
-  transition: background-color 0.2s;
+  background: ${(props) => props.theme.colors.primaryRed};
 
   &:hover {
-    background: #d41730;
+    background: ${(props) => props.theme.colors.secondaryRed};
   }
 `;
 

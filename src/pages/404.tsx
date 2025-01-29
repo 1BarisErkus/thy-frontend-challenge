@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlane } from "@fortawesome/free-solid-svg-icons";
 
 const Container = styled.div`
-  background-color: #063048;
+  background-color: ${(props) => props.theme.colors.primaryWhite};
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -13,67 +13,38 @@ const Container = styled.div`
   justify-content: center;
   padding: 20px;
   text-align: center;
-  color: white;
-`;
+  color: ${(props) => props.theme.colors.primaryBlack};
 
-const ErrorCode = styled.h1`
-  font-size: 120px;
-  margin: 0;
-  color: #e81932;
-  display: flex;
-  align-items: center;
-  gap: 20px;
-
-  @media (max-width: 768px) {
-    font-size: 80px;
+  h1 {
+    font-size: 120px;
+    color: ${(props) => props.theme.colors.primaryRed};
+    display: flex;
+    align-items: center;
   }
-`;
 
-const Title = styled.h2`
-  font-size: 32px;
-  margin: 20px 0;
-  font-weight: normal;
-
-  @media (max-width: 768px) {
-    font-size: 24px;
+  h2 {
+    font-size: 32px;
+    margin: 20px 0;
+    font-weight: normal;
   }
-`;
 
-const Description = styled.p`
-  font-size: 18px;
-  margin-bottom: 40px;
-  color: rgba(255, 255, 255, 0.8);
-
-  @media (max-width: 768px) {
-    font-size: 16px;
+  p {
+    font-size: 18px;
+    margin-bottom: 40px;
   }
-`;
 
-const Button = styled.button`
-  background: #e81932;
-  color: white;
-  border: none;
-  padding: 16px 32px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 16px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  transition: background-color 0.2s;
+  button {
+    background: ${(props) => props.theme.colors.primaryRed};
 
-  &:hover {
-    background: #d41730;
+    &:hover {
+      background: ${(props) => props.theme.colors.secondaryRed};
+    }
   }
 `;
 
 const PlaneIcon = styled(FontAwesomeIcon)`
   transform: rotate(-45deg);
   font-size: 60px;
-
-  @media (max-width: 768px) {
-    font-size: 40px;
-  }
 `;
 
 export default function NotFound() {
@@ -87,15 +58,15 @@ export default function NotFound() {
       </Head>
 
       <Container>
-        <ErrorCode>
+        <h1>
           4<PlaneIcon icon={faPlane} />4
-        </ErrorCode>
-        <Title>Üzgünüz, bu uçuş rotası bulunamadı!</Title>
-        <Description>
+        </h1>
+        <h2>Üzgünüz, bu uçuş rotası bulunamadı!</h2>
+        <p>
           Aradığınız sayfa kaldırılmış, adı değiştirilmiş veya geçici olarak
           kullanım dışı olabilir.
-        </Description>
-        <Button onClick={() => router.push("/")}>Ana Sayfaya Dön</Button>
+        </p>
+        <button onClick={() => router.push("/")}>Ana Sayfaya Dön</button>
       </Container>
     </>
   );

@@ -32,6 +32,19 @@ const GlobalStyle = createGlobalStyle`
 
   button {
     font-family: inherit;
+    cursor: pointer;
+    border: none;
+    padding: 16px 32px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  ul {
+    list-style: none;
   }
 
   @media (prefers-color-scheme: dark) {
@@ -39,6 +52,5 @@ const GlobalStyle = createGlobalStyle`
       color-scheme: dark;
     }
   }
-`;
-
+`; 
 export default GlobalStyle; 

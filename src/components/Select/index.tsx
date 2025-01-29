@@ -1,8 +1,8 @@
 import styled from "styled-components";
-import citiesData from "../../db/cities.json";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlane, faChevronDown } from "@fortawesome/free-solid-svg-icons";
-import { useSelectStore } from "../../store/useSelectStore";
+import { useCities, City } from "../../hooks/useCities";
+import { useState } from "react";
 
 const SelectWrapper = styled.div`
   position: relative;
@@ -13,19 +13,10 @@ const SelectWrapper = styled.div`
 const SelectButton = styled.button`
   width: 100%;
   background: white;
-  border: none;
   padding: 10px 15px;
   border-radius: 4px;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
   font-size: 16px;
-  color: #666;
-`;
-
-const IconWrapper = styled.span`
-  margin-right: 10px;
-  color: #666;
+  color: ${(props) => props.theme.colors.primaryGray};
 `;
 
 const ChevronIcon = styled(FontAwesomeIcon)<{ $isOpen: boolean }>`
@@ -59,25 +50,14 @@ const CityOption = styled.div`
   justify-content: space-between;
   gap: 20px;
 
+  span {
+    color: ${(props) => props.theme.colors.secondaryGray};
+  }
+
   &:hover {
     background: rgba(0, 0, 0, 0.05);
   }
 `;
-
-const CityName = styled.span`
-  color: #333;
-`;
-
-const CountryName = styled.span`
-  color: #666;
-  font-size: 14px;
-`;
-
-type City = {
-  id: string;
-  name: string;
-  country: string;
-};
 
 type SelectProps = {
   id: string;
@@ -87,25 +67,20 @@ type SelectProps = {
 };
 
 export const Select = ({ id, placeholder, value, onChange }: SelectProps) => {
-  const { openSelectId, setOpenSelectId } = useSelectStore();
-  const isOpen = openSelectId === id;
-  const cities = citiesData.cities;
+  const [isOpen, setIsOpen] = useState(false);
+  const cities = useCities();
 
   const handleSelect = (city: City) => {
     onChange(city);
-    setOpenSelectId(null);
-  };
-
-  const handleClick = () => {
-    setOpenSelectId(isOpen ? null : id);
+    setIsOpen(false);
   };
 
   return (
     <SelectWrapper id={`select-${id}`}>
-      <SelectButton onClick={handleClick}>
-        <IconWrapper>
+      <SelectButton onClick={() => setIsOpen(!isOpen)}>
+        <span>
           <FontAwesomeIcon icon={faPlane} />
-        </IconWrapper>
+        </span>
         {value ? value.name : placeholder}
         <ChevronIcon icon={faChevronDown} $isOpen={isOpen} />
       </SelectButton>
@@ -113,8 +88,8 @@ export const Select = ({ id, placeholder, value, onChange }: SelectProps) => {
       <DropdownContainer $isOpen={isOpen}>
         {cities.map((city) => (
           <CityOption key={city.id} onClick={() => handleSelect(city)}>
-            <CityName>{city.name}</CityName>
-            <CountryName>{city.country}</CountryName>
+            <span>{city.name}</span>
+            <span>{city.country}</span>
           </CityOption>
         ))}
       </DropdownContainer>

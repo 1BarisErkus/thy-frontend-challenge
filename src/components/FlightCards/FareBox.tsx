@@ -3,61 +3,90 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
 
 const FareBoxContainer = styled.div`
-  padding: 24px;
-  background: white;
   display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 32px;
+  flex-direction: column;
   position: relative;
-  cursor: pointer;
+  border-radius: 4px;
+  overflow: hidden;
+  height: 100%;
 `;
 
-const ArrowIcon = styled.div<{ isSelected: boolean }>`
-  position: absolute;
-  right: 16px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #687791;
-  transition: all 0.2s ease;
+const FareHeader = styled.div<{ $isSelected: boolean }>`
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  background: ${(props) =>
+    props.$isSelected
+      ? props.theme.colors.secondaryWhite
+      : props.theme.colors.primaryWhite};
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  height: 100%;
+  min-height: 72px;
+
+  &:hover {
+    background: ${(props) => props.theme.colors.secondaryWhite};
+  }
+`;
+
+const RadioButton = styled.div<{ $isSelected: boolean }>`
+  width: 16px;
+  height: 16px;
+  border: 1px solid
+    ${(props) =>
+      props.$isSelected
+        ? props.theme.colors.primaryRed
+        : props.theme.colors.primaryGray};
+  border-radius: 50%;
+  position: relative;
+  flex-shrink: 0;
+
+  &:after {
+    content: "";
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: ${(props) => props.theme.colors.primaryRed};
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: ${(props) => (props.$isSelected ? 1 : 0)};
+  }
+`;
+
+const FareInfo = styled.div`
+  flex: 1;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
 `;
 
 const FareType = styled.div`
   font-size: 12px;
-  color: #687791;
+  color: ${(props) => props.theme.colors.primaryGray};
+  font-weight: 400;
   text-transform: uppercase;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-
-  &:before {
-    content: "";
-    width: 16px;
-    height: 16px;
-    border: 1px solid #687791;
-    border-radius: 50%;
-    display: inline-block;
-  }
 `;
 
-const FarePrice = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-`;
-
-const PriceLabel = styled.div`
+const OnePassegerAmount = styled.div`
   font-size: 12px;
-  color: #687791;
+  color: ${(props) => props.theme.colors.primaryGray};
+  font-weight: 400;
 `;
 
-const Price = styled.div`
-  font-size: 20px;
-  font-weight: 600;
-  color: #1c2a3a;
+const FareAmount = styled.div`
   display: flex;
   align-items: baseline;
   gap: 4px;
+  color: ${(props) => props.theme.colors.primaryBlack};
+
+  span {
+    font-size: 16px;
+    font-weight: 600;
+  }
 `;
 
 type FareBoxProps = {
@@ -74,15 +103,25 @@ export const FareBox = ({
   onSelect,
 }: FareBoxProps) => {
   return (
-    <FareBoxContainer onClick={onSelect}>
-      <FareType>{type.toLowerCase()}</FareType>
-      <FarePrice>
-        <PriceLabel>Yolcu Başına</PriceLabel>
-        <Price>TRY {amount.toFixed(2)}</Price>
-      </FarePrice>
-      <ArrowIcon isSelected={isSelected}>
-        <FontAwesomeIcon icon={isSelected ? faChevronUp : faChevronDown} />
-      </ArrowIcon>
+    <FareBoxContainer>
+      <FareHeader $isSelected={isSelected} onClick={onSelect}>
+        <RadioButton $isSelected={isSelected} />
+        <FareInfo>
+          <FareType>{type}</FareType>
+          <OnePassegerAmount>
+            Yolcu Başına
+            <FareAmount>
+              <span className="currency">TRY</span>
+              <span className="amount">{amount.toFixed(2)}</span>
+            </FareAmount>
+          </OnePassegerAmount>
+        </FareInfo>
+        <FontAwesomeIcon
+          icon={isSelected ? faChevronUp : faChevronDown}
+          color="#687791"
+          size="sm"
+        />
+      </FareHeader>
     </FareBoxContainer>
   );
 };

@@ -1,24 +1,29 @@
 import type { AppProps } from "next/app";
-import { ThemeProvider } from "styled-components";
-import { Header } from "@/components/Header";
-import "@fortawesome/fontawesome-svg-core/styles.css";
 import { useRouter } from "next/router";
-import styled from "styled-components";
+import styled, { ThemeProvider } from "styled-components";
+import { Header } from "@/components/Header";
 import GlobalStyle from "@/styles/globalStyles";
+import "@fortawesome/fontawesome-svg-core/styles.css";
 
 const theme = {
   colors: {
-    primary: "#063048",
-    secondary: "#E81932",
-    text: "#FFFFFF",
-    placeholder: "#666666",
+    primaryRed: "#E81932",
+    secondaryRed: "#D41730",
+    primaryBlue: "#063048",
+    primaryGreen: "#4caf50",
+    primaryGray: "#687791",
+    secondaryGray: "#333",
+    primaryDisabled: "#cccccc",
+    primaryWhite: "#FFFFFF",
+    primaryBlack: "#000000",
+    secondaryWhite: "#F5F5F5",
   },
 };
 
 const PageWrapper = styled.div<{ $isBlueBackground: boolean }>`
   min-height: 100vh;
   background-color: ${(props) =>
-    props.$isBlueBackground ? "#063048" : "#FFFFFF"};
+    props.$isBlueBackground ? theme.colors.primaryBlue : "#FFFFFF"};
 `;
 
 export default function App({ Component, pageProps }: AppProps) {
